@@ -1,25 +1,79 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react"
+import Confetti from "react-confetti"
+import Die from "./Die"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const [dice, setDice] = React.useState(allNewDice())
+    const [tenzies, setTenzies] = React.useState(false)
+    const [numberRolls, setNumberRolls] = React.useState(0)
+    
+    React.useEffect(() => {
+        const firstValue = dice[0].value
+        const allHeld = dice.every(die => die.held)
+        const allSameNumber = dice.every(die => die.value === firstValue)
+        if(allHeld && allSameNumber) {
+            setTenzies(true)
+        }
+    }, [dice])
+    
+    function randomDieValue() {
+        return Math.ceil(Math.random() * 6)
+    }
+
+    function allNewDice() {
+        const newArray = []
+        for(let i = 0; i < 10; i++) {
+            const newDie = {
+                value: randomDieValue(),
+                held: false,
+                id: i + 1
+            }
+            newArray.push(newDie)
+        }
+        return newArray
+    }
+
+    function rollUnheldDice() {
+        setDice((oldDice) => oldDice.map((die, i) =>
+            die.held ? 
+                die : 
+                { value: randomDieValue(), held: false, id: i + 1 }
+        ))
+        setNumberRolls(numRolls => {
+            return numRolls +1
+        })
+    }
+
+
+    function resetGame() {
+        setDice(allNewDice())
+        setTenzies(false)
+        setNumberRolls(0)
+        console.log("Game reset")
+    }
+
+    function holdDice(id) {
+        setDice(prevDice => prevDice.map(die => {
+            return die.id === id ? 
+                {...die, held: !die.held} : 
+                die
+        }))
+    }
+
+    const diceElements = dice.map((die) => (
+        <Die key={die.id} {...die} hold={() => holdDice(die.id)} />
+    ))
+
+    return (
+        <main>
+            {tenzies && <Confetti />}
+            <h1>Tenzies</h1>
+            <p>Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
+            <div className="die-container">{diceElements}</div>
+            <button className="roll-dice" onClick={tenzies ? resetGame : rollUnheldDice}>
+                {tenzies ? "Reset Game" : "Roll"}
+            </button>
+            <h2>Number of rolls: {numberRolls}</h2>
+        </main>
+    )
 }
-
-export default App;
