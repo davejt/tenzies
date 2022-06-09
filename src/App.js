@@ -49,7 +49,6 @@ export default function App() {
         setDice(allNewDice())
         setTenzies(false)
         setNumberRolls(0)
-        console.log("Game reset")
     }
 
     function holdDice(id) {
