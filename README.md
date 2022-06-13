@@ -4,7 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 This project was completed following the Scrimba tutorial "Learn React for Free": https://scrimba.com/learn/learnreact
 
-This is the Tenzies game developed during the course, plus an addition of displaying the number of rolls.
+This is the Tenzies game developed during the course, plus an addition of:
+1. Displaying the number of rolls
+2. Displaying dots on the dice instea of the number
 
 ## Available Scripts
 
